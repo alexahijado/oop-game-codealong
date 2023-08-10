@@ -80,6 +80,17 @@ setInterval(() => {
 setInterval(() => {
     obstaclesArr.forEach(function(obstacleInstance){
         obstacleInstance.moveDown();
+
+        if (
+            player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
+            player.positionX + player.width > obstacleInstance.positionX &&
+            player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
+            player.positionY + player.height > obstacleInstance.positionY
+          ) {
+            // Collision detected!
+            console.log("GAME OVER");
+            location.href = "./gameover.html";
+          }
     })
 }, 20);
 
@@ -90,3 +101,17 @@ document.addEventListener("keydown", (event) => {
         return player.moveRight()
     }
 });
+
+
+/* if (
+    rect1.x < rect2.x + rect2.w &&
+    rect1.x + rect1.w > rect2.x &&
+    rect1.y < rect2.y + rect2.h &&
+    rect1.y + rect1.h > rect2.y
+  ) {
+    // Collision detected!
+    this.color("green");
+  } else {
+    // No collision
+    this.color("blue");
+  } */
