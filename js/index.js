@@ -86,6 +86,7 @@ setInterval(() => {
         //remove if it reaches the bottom
         if (obstacleInstance.positionY < 0 - obstacleInstance.height) {
             obstacleInstance.domElement.remove(); //remove from the DOM
+            obstaclesArr.shift(); //revove from the array
         }
 
         //detect collision
