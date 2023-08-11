@@ -65,48 +65,67 @@ class Obstacle {
     
 }
 
-const player = new Player();
-const obstacleOne = new Obstacle();
+class Game {
+    constructor() {
+        this.player = new Player();
+        this.obstaclesArr = []; //will store instances of the class Obstacle
+    }
+    start() {
 
-const obstaclesArr = []
+        // attach event listeners
+        this.attachEventListeners();
 
-//create obstacles
-setInterval(() => {
-    const newObstacle = new Obstacle();
-    obstaclesArr.push(newObstacle);
-}, 2000);
+        // create obstacles
+        setInterval(() => {
+            const newObstacle = new Obstacle();
+            this.obstaclesArr.push(newObstacle);
+        }, 2000);
 
-//move all obstacles
-setInterval(() => {
-    obstaclesArr.forEach(function(obstacleInstance){
 
-        //move
-        obstacleInstance.moveDown();
+        // move all obstacles
+        setInterval(() => {
+            this.obstaclesArr.forEach((obstacleInstance) => {
 
-        //remove if it reaches the bottom
+                // move
+                obstacleInstance.moveDown();
+
+                // remove if outside
+                this.removeObstacleIfOutside(obstacleInstance);
+                
+                // detect collision
+                this.detectCollision(obstacleInstance);
+
+            });
+        }, 20);
+    }
+    attachEventListeners() {
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowLeft") {
+                this.player.moveLeft();
+            } else if (event.key === "ArrowRight") {
+                this.player.moveRight();
+            }
+        });
+    }
+    removeObstacleIfOutside(obstacleInstance){
         if (obstacleInstance.positionY < 0 - obstacleInstance.height) {
-            obstacleInstance.domElement.remove(); //remove from the DOM
-            obstaclesArr.shift(); //revove from the array
+            obstacleInstance.domElement.remove(); //remove from the dom
+            this.obstaclesArr.shift(); // remove from the array
         }
-
-        //detect collision
+    }
+    detectCollision(obstacleInstance){
         if (
-            player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
-            player.positionX + player.width > obstacleInstance.positionX &&
-            player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
-            player.positionY + player.height > obstacleInstance.positionY
-          ) {
+            this.player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
+            this.player.positionX + this.player.width > obstacleInstance.positionX &&
+            this.player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
+            this.player.positionY + this.player.height > obstacleInstance.positionY
+        ) {
             // Collision detected!
             console.log("GAME OVER");
             location.href = "./gameover.html";
-          }
-    })
-}, 20);
-
-document.addEventListener("keydown", (event) => {
-    if (event.code === "ArrowLeft") {
-        return player.moveLeft()
-    } else if (event.code === "ArrowRight") {
-        return player.moveRight()
+        }
     }
-});
+}
+
+const game = new Game();
+game.start();
