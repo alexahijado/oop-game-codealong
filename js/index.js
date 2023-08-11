@@ -1,9 +1,9 @@
 class Player {
     constructor () {
-        this.positionX = 40;
-        this.positionY = 0;
         this.width = 20;
         this.height = 10;
+        this.positionX = 50 - (this.width / 2);
+        this.positionY = 0;
         this.domElement = null;
 
         this.createDomElement();
@@ -33,10 +33,10 @@ class Player {
 
 class Obstacle {
     constructor(){
-        this.positionX = 47.5;
-        this.positionY = 100;
         this.width = 5;
         this.height = 5;
+        this.positionX = Math.floor(Math.random()*(100-this.width + 1));
+        this.positionY = 100;
         this.domElement = null;
 
         this.createDomElement();
@@ -74,13 +74,21 @@ const obstaclesArr = []
 setInterval(() => {
     const newObstacle = new Obstacle();
     obstaclesArr.push(newObstacle);
-}, 3000);
+}, 2000);
 
 //move all obstacles
 setInterval(() => {
     obstaclesArr.forEach(function(obstacleInstance){
+
+        //move
         obstacleInstance.moveDown();
 
+        //remove if it reaches the bottom
+        if (obstacleInstance.positionY < 0 - obstacleInstance.height) {
+            obstacleInstance.domElement.remove(); //remove from the DOM
+        }
+
+        //detect collision
         if (
             player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
             player.positionX + player.width > obstacleInstance.positionX &&
@@ -101,17 +109,3 @@ document.addEventListener("keydown", (event) => {
         return player.moveRight()
     }
 });
-
-
-/* if (
-    rect1.x < rect2.x + rect2.w &&
-    rect1.x + rect1.w > rect2.x &&
-    rect1.y < rect2.y + rect2.h &&
-    rect1.y + rect1.h > rect2.y
-  ) {
-    // Collision detected!
-    this.color("green");
-  } else {
-    // No collision
-    this.color("blue");
-  } */
